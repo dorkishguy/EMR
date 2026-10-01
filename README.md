@@ -25,6 +25,16 @@ git clone https://github.com/dorkishguy/EMR.git
 python main.py
 ```
 
+# For server
+
+- Run
+
+```
+python serve.py
+```
+
+- Open `localhost:8000` in your browser
+
 ### TODO
 - recording to get history of patient
 

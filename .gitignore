@@ -3,3 +3,4 @@ __pycache__/
 .env 
 #under construction
 ai.py
+patients.db

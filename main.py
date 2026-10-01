@@ -14,9 +14,6 @@ from textual.app import App
 from textual.widgets import Button, Input, Header, Footer, Label, DataTable
 from textual.validation import Validator
 
-columns = [("id", "date", "name", "age", "sex", "bday", "history")]
-rows = searchInfo()
-
 # load_thread = threading.Thread(target=load_model)
 # load_thread.start()
 
@@ -48,6 +45,8 @@ class Data(Screen):
         yield Footer()
 
     def on_mount(self):
+        columns = [("id", "date", "name", "age", "sex", "bday", "history")]
+        rows = searchInfo()
         self.title = "EMR"
         self.sub_title = "A TUI application"
         table = self.query_one(DataTable)
