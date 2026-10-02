@@ -1,0 +1,25 @@
+Add {
+    align: center middle;
+    color: white;
+}
+
+Vertical {
+    margin: 5;
+    width: 50%;
+}
+
+Input, TextArea {
+    margin: 1;
+    width: 100%;
+    height: 3;
+}
+
+#history {
+    height: 7;
+    margin: 1 1 2 1;
+}
+
+#submit {
+    width: 100%;
+    margin: 1;
+}

@@ -11,8 +11,9 @@ from datetime import date, datetime, timezone, timedelta
 from textual import on
 from textual.screen import Screen
 from textual.app import App
-from textual.widgets import Button, Input, Header, Footer, Label, DataTable
+from textual.widgets import Button, Input, Header, Footer, Label, DataTable, TextArea
 from textual.validation import Validator
+from textual.containers import Vertical
 
 # load_thread = threading.Thread(target=load_model)
 # load_thread.start()
@@ -45,7 +46,7 @@ class Data(Screen):
         yield Footer()
 
     def on_mount(self):
-        columns = [("id", "date", "name", "age", "sex", "bday", "history")]
+        columns = [("id", "date", "name", "age", "gender", "bday", "history")]
         rows = searchInfo()
         self.title = "EMR"
         self.sub_title = "A TUI application"
@@ -81,15 +82,16 @@ class Add(Screen):
     def compose(self):
         yield Header()
         yield Footer()
-        yield Input(placeholder="Name", type="text", id="name", classes="input", validate_on="blur")
-        yield Input(placeholder="Age", type="number", id="age", classes="input", validate_on="blur")
-        yield Input(placeholder="Gender(m/f)", type="text", id="gender", classes="input", validators=[GenderValidator()], validate_on="blur")
-        yield Input(placeholder="DOB(yyyy-mm-dd)", type="text", id="dob", classes="input", validators = [DateValidator()], validate_on="blur") 
-        if "hist" not in globals():
-            yield Input(placeholder="History", type="text", id="history", classes="input", validate_on="blur")
-        # elif "hist" in globals():
-        #     yield Input(value=hist, placeholder="History", type="text", id="history", classes="input", validate_on="blur")
-        yield Button("Submit", id="submit")
+        with Vertical():
+            yield Input(placeholder="Name", type="text", id="name", classes="input", validate_on="blur")
+            yield Input(placeholder="Age", type="number", id="age", classes="input", validate_on="blur")
+            yield Input(placeholder="Gender(m/f)", type="text", id="gender", classes="input", validators=[GenderValidator()], validate_on="blur")
+            yield Input(placeholder="DOB(yyyy-mm-dd)", type="text", id="dob", classes="input", validators = [DateValidator()], validate_on="blur") 
+            if "hist" not in globals():
+                yield TextArea(placeholder="History", id="history", classes="input")
+            # elif "hist" in globals():
+            #     yield Input(value=hist, placeholder="History", type="text", id="history", classes="input", validate_on="blur")
+            yield Button("Submit", id="submit")
 
     @on(Button.Pressed, "#submit")
     def submit(self):
@@ -103,13 +105,14 @@ class Add(Screen):
             age = self.query_one("#age", Input).value
             gender = self.query_one("#gender", Input).value
             dob = self.query_one("#dob", Input).value
-            history = self.query_one("#history", Input).value
+            history = self.query_one("#history", TextArea).text
             add_data(datee, name, age, gender, dob, history)
 
             text_inputs = self.query(Input)
             for input in text_inputs:
                 with input.prevent(Input.Changed):
                     input.value = ""
+            self.query_one("#history", TextArea).clear()
         else: 
             self.notify("You've put something wrong.", severity="error", timeout=10)
 
@@ -194,8 +197,9 @@ class Add(Screen):
 #                 processing_thread.start()
 
 class mainApp(App): 
-     def on_mount(self):
-          self.push_screen(Add())
+    CSS_PATH="styles.tcss"
+    def on_mount(self):
+        self.push_screen(Add())
 
 
 app = mainApp()
